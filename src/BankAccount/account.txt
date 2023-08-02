@@ -1,0 +1,3 @@
+Name:Michael Eshun Account:FK03577638376 Acc_Type:Saving Balance:500.0 CardNumber:62954327 Pin:3332
+Name:Kojo Sarpong Account:UA05392943640 Acc_Type:Current Balance:0.0 CardNumber:76122715 Pin:8983
+Name:John Opoku Account:GA06500597945 Acc_Type:Current Balance:893.0 CardNumber:51647708 Pin:3490
