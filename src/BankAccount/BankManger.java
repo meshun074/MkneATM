@@ -10,13 +10,12 @@ import java.util.Scanner;
 
 public class BankManger {
     private static final File file = new File("src/BankAccount/banks.txt");
-    static Scanner sc = new Scanner(System.in);
     public static void main(String[] args){
         boolean exit=false;
         while (!exit){
             System.out.println("Hello and Welcome my bank creating system.\nPress 1 to create a Bank\nPress any key to exit.");
             try {
-                if (Integer.parseInt(sc.nextLine()) == 1) {
+                if (Integer.parseInt(AccountManager.sc.nextLine()) == 1) {
                     createBanks();
                 } else {
                     exit = true;
@@ -35,9 +34,9 @@ public class BankManger {
         String branchName="";
         while (invalid) {
             System.out.println("Enter bank name");
-            bankName = sc.nextLine();
+            bankName = AccountManager.sc.nextLine();
             System.out.println("Enter branch name");
-            branchName = sc.nextLine();
+            branchName = AccountManager.sc.nextLine();
             id = bankName.charAt(0) + String.valueOf(branchName.charAt(0))+"0";
             if(!checkValidity(bankName,id,branchName).equals(""))
             {

@@ -11,7 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AccountManager {
     private static final File file = new File("src/BankAccount/account.txt");
-    static Scanner sc = new Scanner(System.in);
+    private static final File tempfile = new File("src/BankAccount/temp.txt");
+    public static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
         boolean exit = false;
@@ -31,8 +32,8 @@ public class AccountManager {
 
     private static void createAccount() {
         boolean invalid = true;
-        String bankCode="";
-        String cus_name = "";
+        String bankCode;
+        String cus_name;
         double balance;
         String acc_type;
         List<Banks> banksList = new ArrayList<>(Objects.requireNonNull(BankManger.getBanks()));
@@ -43,7 +44,7 @@ public class AccountManager {
             cus_name = sc.nextLine();
             banksList.forEach(x -> System.out.println(counter.incrementAndGet() + " " + x.getName()));
             System.out.println("Select bank name");
-            bankCode = banksList.get(OptionMenu.getOption(banksList.size())- 1).getId();
+            bankCode = banksList.get(OptionMenu.getOption(banksList.size()) - 1).getId();
             System.out.println("Account type \n1. Saving 2. Current \nSelect account type name");
             acc_type = OptionMenu.getOption(2) == 1 ? "Saving" : "Current";
             System.out.println("Enter initial balance");
@@ -54,50 +55,79 @@ public class AccountManager {
             }
             System.out.println("Enter 4 digit pin for VISA card verification");
             pin = getPin();
-            if (addAccount(cus_name, acc_type, balance, bankCode,pin)) {
+            if (addAccount(cus_name, acc_type, balance, bankCode, pin)) {
                 invalid = false;
             }
             System.out.println("Done");
         }
     }
 
-    private static String createAccNumber(){
-        int start=1000000000;
-        long end= 9999999999L;
-        Random random =new Random();
+    private static String createAccNumber() {
+        int start = 1000000000;
+        long end = 9999999999L;
+        Random random = new Random();
         //get the range, casting to long to avoid overflow problems
-        long range = end - (long)start + 1;
+        long range = end - (long) start + 1;
         // compute a rvalue of the range, 0 <= frac < range
-        long rvalue = (long)(range * random.nextDouble());
-        long accNumber =  rvalue + (long)start;
+        long rvalue = (long) (range * random.nextDouble());
+        long accNumber = rvalue + (long) start;
         return String.valueOf(accNumber);
     }
 
-    private static String cardNumber(){
-        int start=10000000;
-        long end= 99999999L;
-        Random random =new Random();
+    private static String cardNumber() {
+        int start = 10000000;
+        long end = 99999999L;
+        Random random = new Random();
         //get the range, casting to long to avoid overflow problems
-        long range = end - (long)start + 1;
+        long range = end - (long) start + 1;
         // compute a rvalue of the range, 0 <= frac < range
-        long rvalue = (long)(range * random.nextDouble());
-        long cardNumber =  rvalue + (long)start;
+        long rvalue = (long) (range * random.nextDouble());
+        long cardNumber = rvalue + (long) start;
         return String.valueOf(cardNumber);
     }
 
     private static boolean addAccount(String cusName, String accType, double balance, String bankCode, String pin) {
-        String accNumber=bankCode+createAccNumber();
-        Account acc = new Account(cusName, accNumber,balance,accType,pin, cardNumber());
-        if (recordAccount(acc)){
+        String accNumber = bankCode + createAccNumber();
+        Account acc = new Account(cusName, accNumber, balance, accType, pin, cardNumber());
+        if (recordAccount(acc)) {
             System.out.println("Account created successfully");
             return true;
         }
         return false;
     }
 
+    public static void updateAccount(Account account) {
+        String line;
+        try {
+            Scanner fr = new Scanner(file);
+            try (FileWriter fw = new FileWriter(tempfile)) {
+                while (fr.hasNext()) {
+                    line = fr.nextLine();
+                    if (!line.contains(account.getCardId())) {
+                        fw.write(line + "\n");
+                    }
+                }
+                fr.close();
+                fw.write("Name:" + account.getCus_name() + " Account:" + account.getAcc_number() + " Acc_Type:" + account.getAcc_type() + " Balance:" + account.getBalance() + " CardNumber:" + account.getCardId() + " Pin:" + account.getPin() + "\n");
+            }
+            fr=new Scanner(tempfile);
+            FileWriter fw=new FileWriter(file);
+            while (fr.hasNext())
+            {
+                fw.write(fr.nextLine()+"\n");
+            }
+            fr.close();
+            fw.close();
+            if (tempfile.delete()) System.out.println("Deleted");
+            else System.out.println("Unable to delete file");
+        } catch (IOException e) {
+            System.out.println("Error in updating account " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     private static String getPin() {
-        String pin = "";
+        String pin;
         try {
             pin = sc.nextLine();
             if (pin.length() != 4) {
@@ -114,7 +144,7 @@ public class AccountManager {
     private static boolean recordAccount(Account account) {
         try {
             FileWriter fw = new FileWriter(file, true);
-            fw.write("Name:" +account.getCus_name() + " Account:" + account.getAcc_number() + " Acc_Type:" + account.getAcc_type() +  " Balance:" + account.getBalance() + " CardNumber:" + account.getCardId()+" Pin:" + account.getPin() + "\n");
+            fw.write("Name:" + account.getCus_name() + " Account:" + account.getAcc_number() + " Acc_Type:" + account.getAcc_type() + " Balance:" + account.getBalance() + " CardNumber:" + account.getCardId() + " Pin:" + account.getPin() + "\n");
             System.out.println(account.getAcc_number());
             fw.close();
             return true;
@@ -123,13 +153,14 @@ public class AccountManager {
             return false;
         }
     }
-    public static List<Account> getAccounts(){
+
+    public static List<Account> getAccounts() {
         try {
-            List<Account> accounts=new ArrayList<>();
+            List<Account> accounts = new ArrayList<>();
             String text;
-            Scanner fr =new Scanner(file);
-            while (fr.hasNext()){
-                text=fr.nextLine();
+            Scanner fr = new Scanner(file);
+            while (fr.hasNext()) {
+                text = fr.nextLine();
                 accounts.add(readAccount(text));
             }
             return accounts;
@@ -139,14 +170,13 @@ public class AccountManager {
         }
     }
 
-    public static Account readAccount(String text)
-    {
-        String accName=text.substring(5,text.indexOf(" Account"));
-        String accNumber=text.substring(text.indexOf("Account:")+8,text.indexOf(" Acc_Type"));
-        String accType=text.contains("Saving")?"Saving":"Current";
-        double balance=Double.parseDouble(text.substring(text.indexOf("Balance:")+8,text.indexOf(" CardNumber")));
-        String idcard =text.substring(text.indexOf("CardNumber")+10,text.indexOf(" Pin:"));
-        String pin =text.substring(text.indexOf("Pin:")+4);
-        return new Account(accName,accNumber,balance,accType,pin,idcard);
+    public static Account readAccount(String text) {
+        String accName = text.substring(5, text.indexOf(" Account"));
+        String accNumber = text.substring(text.indexOf("Account:") + 8, text.indexOf(" Acc_Type"));
+        String accType = text.contains("Saving") ? "Saving" : "Current";
+        double balance = Double.parseDouble(text.substring(text.indexOf("Balance:") + 8, text.indexOf(" CardNumber")));
+        String idcard = text.substring(text.indexOf("CardNumber") + 10, text.indexOf(" Pin:"));
+        String pin = text.substring(text.indexOf("Pin:") + 4);
+        return new Account(accName, accNumber, balance, accType, pin, idcard);
     }
 }
