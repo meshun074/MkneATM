@@ -12,6 +12,7 @@ public class BankManger {
     private static final File file = new File("src/BankAccount/banks.txt");
     public static void main(String[] args){
         boolean exit=false;
+//        get user option to create a sample bank
         while (!exit){
             System.out.println("Hello and Welcome my bank creating system.\nPress 1 to create a Bank\nPress any key to exit.");
             try {
@@ -26,6 +27,8 @@ public class BankManger {
             }
         }
     }
+
+//    Create bank using user input
     private static void createBanks()
     {
         String id = "";
@@ -48,6 +51,7 @@ public class BankManger {
         recordBank(bank);
     }
 
+//    Save bank details in a file
     private static void recordBank(Banks bank) {
         try {
             FileWriter fw=new FileWriter(file,true);
@@ -58,6 +62,7 @@ public class BankManger {
         }
     }
 
+//    check if bank does not exist
     private static String checkValidity(String bankName,String id,String branchName) {
         try {
             Scanner fr= new Scanner(file);
@@ -79,6 +84,8 @@ public class BankManger {
             return "";
         }
     }
+
+//    get all stored banks in file
     public static List<Banks> getBanks(){
         try {
             List<Banks> banks=new ArrayList<>();

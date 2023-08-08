@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Authentication {
 
+    //Login method authenticate user
     public static Account login() {
         File file = new File("src/BankAccount/account.txt");
         Scanner fr;
@@ -17,6 +18,7 @@ public class Authentication {
 
         try {
             input = new Scanner(System.in);
+            //Allow user login for only 3 times
             for (int i = 1; i <= 3; i++) {
                 fr = new Scanner(file);
                 System.out.println("Enter Card Number");

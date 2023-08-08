@@ -3,6 +3,7 @@ package ATM_Machine;
 import BankAccount.Account;
 
 public class CheckBalance {
+    // Displays users account details
     public static int DisplayBalance(Account account)
     {
         System.out.println("Account Name: "+account.getCus_name());

@@ -9,6 +9,7 @@ public class OptionMenu {
         int option;
         String message;
         do {
+//            displays menu
             System.out.printf("""
                     ----Option Menu
                     Hello %s
@@ -16,24 +17,36 @@ public class OptionMenu {
                     Enter options to perform transaction
                     1.Check Balance
                     2.Cash Withdrawal
-                    3.Cancel and EXit.
+                    3.Cash Deposit
+                    4.Cancel and EXit.
                     """, account.getCus_name().substring(0, account.getCus_name().indexOf(" ")), account.getAcc_number());
-            option = getOption(3);
+            option = getOption(4);
             if(option == 1)
             {
-                if(CheckBalance.DisplayBalance(account)==2)
-                    option=3;
+                //check balance
+                if(CheckBalance.DisplayBalance(account)==2) {
+                    option = 4;
+                    AccountManager.updateAccount(account);
+                }
             } else if (option ==2) {
+                //withdraw money
                 message=CashWithdrawal.Cashout(account);
                 System.out.println(message);
                 AccountManager.sc.nextLine();
             }
-            else if (option ==3)
+            else if (option ==3){
+                //deposit
+                System.out.println(CashDeposit.deposit(account));
+            }
+            else
             {
+                //update file before existing
                 AccountManager.updateAccount(account);
             }
-        } while (option != 3);
+        } while (option != 4);
     }
+
+    //gets user input option
     public static int getOption(int limit) {
         int option = 0;
         while (option <= 0 || option > limit) {

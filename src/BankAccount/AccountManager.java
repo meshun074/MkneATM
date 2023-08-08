@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AccountManager {
     private static final File file = new File("src/BankAccount/account.txt");
+    //temporary file for updating original file
     private static final File tempfile = new File("src/BankAccount/temp.txt");
     public static Scanner sc = new Scanner(System.in);
 
@@ -30,6 +31,7 @@ public class AccountManager {
         }
     }
 
+//create user account taken user's details as input.
     private static void createAccount() {
         boolean invalid = true;
         String bankCode;
@@ -62,6 +64,7 @@ public class AccountManager {
         }
     }
 
+//    generate user account number
     private static String createAccNumber() {
         int start = 1000000000;
         long end = 9999999999L;
@@ -74,6 +77,7 @@ public class AccountManager {
         return String.valueOf(accNumber);
     }
 
+//    generate users cardnumber
     private static String cardNumber() {
         int start = 10000000;
         long end = 99999999L;
@@ -86,6 +90,7 @@ public class AccountManager {
         return String.valueOf(cardNumber);
     }
 
+//    Create an object for user account
     private static boolean addAccount(String cusName, String accType, double balance, String bankCode, String pin) {
         String accNumber = bankCode + createAccNumber();
         Account acc = new Account(cusName, accNumber, balance, accType, pin, cardNumber());
@@ -96,6 +101,7 @@ public class AccountManager {
         return false;
     }
 
+//update user account details in file
     public static void updateAccount(Account account) {
         String line;
         try {
@@ -126,6 +132,7 @@ public class AccountManager {
         }
     }
 
+//    get user pin
     private static String getPin() {
         String pin;
         try {
@@ -141,6 +148,7 @@ public class AccountManager {
         return pin;
     }
 
+//    Store user account details in a file
     private static boolean recordAccount(Account account) {
         try {
             FileWriter fw = new FileWriter(file, true);
@@ -154,6 +162,7 @@ public class AccountManager {
         }
     }
 
+//    Return list of all accounts in file
     public static List<Account> getAccounts() {
         try {
             List<Account> accounts = new ArrayList<>();
@@ -170,6 +179,7 @@ public class AccountManager {
         }
     }
 
+//    extract individual details of user account from line text in a file
     public static Account readAccount(String text) {
         String accName = text.substring(5, text.indexOf(" Account"));
         String accNumber = text.substring(text.indexOf("Account:") + 8, text.indexOf(" Acc_Type"));

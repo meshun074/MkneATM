@@ -8,6 +8,7 @@ public class CashWithdrawal {
     {
         System.out.println("Enter the amount you want to withdraw");
         double amount;
+        // Ensure user withdrawal does not exceed current deposit
         try {
             amount = Double.parseDouble(AccountManager.sc.nextLine());
             if (account.getBalance()<amount || account.getBalance()-amount<=20)
@@ -23,6 +24,7 @@ public class CashWithdrawal {
                 AccountManager.sc.nextLine();
                 return "Your new balance is "+account.getBalance();
             }
+            //throw an error for incorrect input
         } catch (NumberFormatException e) {
             return "Invalid Amount: ";
         }
